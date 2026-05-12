@@ -11,6 +11,8 @@ public class GenreClient
         new () { Id = 3, Name = "Sports" },
         new () { Id = 4, Name = "Racing" },
         new () { Id = 5, Name = "Kids and Family" },
+        new () { Id = 6, Name = "Action-Adventure" },
+        new () { Id = 7, Name = "Platformer" },
     ];
 
     public Genre[] GetGenres() => [.. _genres];

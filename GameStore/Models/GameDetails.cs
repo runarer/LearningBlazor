@@ -1,12 +1,23 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace GameStore.Models;
 
 public class GameDetails
 
 {
     public int Id { get; set; }
+
+    [Required]
+    [StringLength(50)]
     public required string Name { get; set; }
+
+    [Required]
+    [Display(Name = "Genre")]
     public string? GenreId { get; set; }
+
+    [Range(1, double.MaxValue, ErrorMessage = "Price must be a positive number.")]
     public decimal Price { get; set; }
+
     public DateOnly ReleaseDate { get; set; }
 }

@@ -21,7 +21,7 @@ public class GamesClient
         new () {
             Id = 3,
             Name = "The Witcher 3: Wild Hunt",
-            Genre = "RPG",
+            Genre = "Roleplaying",
             Price = 39.99m,
             ReleaseDate = new DateOnly(2015, 5, 19) },
         new () {
@@ -43,8 +43,7 @@ public class GamesClient
     public GameSummary[] GetGames() => [.. _games];
     public void AddGame(GameDetails game)
     {
-        ArgumentException.ThrowIfNullOrEmpty(game.GenreId);
-        var genre = _genres.Single(genre => genre.Id == int.Parse(game.GenreId));
+        Genre genre = GetGenreById(game.GenreId);
 
         var newGame = new GameSummary
         {
@@ -55,5 +54,50 @@ public class GamesClient
             ReleaseDate = game.ReleaseDate
         };
         _games.Add(newGame);
+    }
+
+
+
+    public GameDetails GetGame(int id)
+    {
+        GameSummary? game = GetGameSummaryById(id);
+
+        var genre = _genres.Single(genre => string.Equals(
+            genre.Name,
+            game.Genre,
+            StringComparison.OrdinalIgnoreCase));
+
+        return new GameDetails
+        {
+            Id = game.Id,
+            Name = game.Name,
+            GenreId = genre.Id.ToString(),
+            Price = game.Price,
+            ReleaseDate = game.ReleaseDate
+        };
+    }
+
+    public void UpdateGame(GameDetails updatedGame)
+    {
+        var game = GetGameSummaryById(updatedGame.Id);
+        var genre = GetGenreById(updatedGame.GenreId);
+
+        game.Name = updatedGame.Name;
+        game.Genre = genre.Name;
+        game.Price = updatedGame.Price;
+        game.ReleaseDate = updatedGame.ReleaseDate;
+    }
+
+    private GameSummary GetGameSummaryById(int id)
+    {
+        var game = _games.Find(game => game.Id == id);
+        ArgumentNullException.ThrowIfNull(game);
+        return game;
+    }
+
+    private Genre GetGenreById(string? id)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(id);
+        return _genres.Single(genre => genre.Id == int.Parse(id));
     }
 }
