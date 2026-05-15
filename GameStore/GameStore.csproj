@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Clients\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
 
 </Project>

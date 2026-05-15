@@ -1,5 +1,8 @@
 
+
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using GameStore.Converters;
 
 namespace GameStore.Models;
 
@@ -14,6 +17,7 @@ public class GameDetails
 
     [Required]
     [Display(Name = "Genre")]
+    [JsonConverter(typeof(StringConverter))]
     public string? GenreId { get; set; }
 
     [Range(1, double.MaxValue, ErrorMessage = "Price must be a positive number.")]

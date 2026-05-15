@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject GamesClient Client
+@attribute [StreamRendering]
 
 
 @using static System.Net.WebRequestMethods
@@ -40,7 +41,18 @@ else
                     <td>@game.Genre</td>
                     <td class="text-end">@game.Price.ToString("C")</td>
                     <td>@game.ReleaseDate.ToString("MMMM dd, yyyy")</td>
-                    <td></td>
+                    <td>
+                        <div class="d-flex">
+                            <a class="btn btn-primary me-2" href="@GameUrl(game.Id)">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="@GetDeleteModalId(game)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        <!--This is the delete modal, it's not shown until the user clicks the delete button -->
+                        <DeleteGame Game="@game" />
+                    </td>
                 </tr>
             }
         </tbody>
@@ -50,9 +62,12 @@ else
     @* private GamesClient client = new(); *@
     private GameSummary[]? games;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        games = Client.GetGames();
+        games = await Client.GetGamesAsync();
     }
+
+    private static string GameUrl(int id) => $"/editgame/{id}";
+
+    private string GetDeleteModalId(GameSummary game) => $"#{DeleteGame.GetModalId(game)}";
 }
